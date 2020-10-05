@@ -1,0 +1,2 @@
+# backend-pizzeria
+En este repositorio se guardará todo el código fuente del backend del proyecto “krosty-pizzeria”. Se utiliza el framework django y la base de datos mysql, sin embargo es posible configurar cualquier gestor de base de datos ya que utilizamos el ORM de django para crear los modelos que mapean las tablas de forma dinámica en X base de datos.  Se agregaran nuevas aplicaciones al proyecto principal a medida que crece.
