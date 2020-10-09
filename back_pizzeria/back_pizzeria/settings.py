@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'gestion_transaccion.apps.GestionTransaccionConfig',
+    'compras.apps.ComprasConfig',
+    'ventas.apps.VentasConfig'
 ]
 
 MIDDLEWARE = [
