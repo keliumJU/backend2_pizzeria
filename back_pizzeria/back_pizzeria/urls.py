@@ -16,9 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+#Endpoint de login
+from rest_framework_jwt.views import obtain_jwt_token
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('transaccion/', include('gestion_transaccion.urls')),
     path('compras/', include('compras.urls')),
-    path('ventas/', include('ventas.urls'))
+    path('ventas/', include('ventas.urls')),
+    path('auth/', obtain_jwt_token) #Al loguearnos en esta ruta generamos un token de autenticacion que dura 5 min aprox
+
 ]

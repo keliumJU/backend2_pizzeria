@@ -37,9 +37,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    #apps reutilizables del proyecto
     'gestion_transaccion.apps.GestionTransaccionConfig',
     'compras.apps.ComprasConfig',
-    'ventas.apps.VentasConfig'
+    'ventas.apps.VentasConfig',
+    #Rest framework
+    'rest_framework',
+    #Añadimos el coors headers para recibir peticiones externas
+    'corsheaders',
+      #Añadimos la aplicacion de filtrado 
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -50,7 +58,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+                #Añadimos los complementos de cors headers
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
+
 
 ROOT_URLCONF = 'back_pizzeria.urls'
 
@@ -121,3 +133,32 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#Configuracion de rest_framework jwt
+REST_FRAMEWORK = {
+     #filtro y orden(asc, des)
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ],
+    #paginacion
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 4,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+
+    ]
+}
+#Permitir cualquier peticion ...
+CORS_ORIGIN_ALLOW_ALL = True
+
+#configuracion de jwt el tiempo de duracion del token y el prefijo de autorizacion del header
+import datetime
+JWT_AUTH = {
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(seconds=3600),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+
+}
