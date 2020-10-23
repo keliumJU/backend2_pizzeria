@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 #Importamos el modulo de filtrado de django-rest-framework
 from django_filters.rest_framework import DjangoFilterBackend
 
+from rest_framework.parsers import MultiPartParser, FormParser
 
 #Vista para filtrar los modelos de acuerdo al usuario actual
 class CurrentUser(viewsets.ModelViewSet):
@@ -30,12 +31,19 @@ class IngredientesView(viewsets.ModelViewSet):
     queryset = Ingredientes.objects.all()
     serializer_class = IngredienteSerializer
 
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 class ProductosView(viewsets.ModelViewSet):
+    parser_classes = [MultiPartParser, FormParser]
+    #permission_classes = [IsAuthenticated]           
     queryset = Productos.objects.all()
     serializer_class = ProductoSerializer
     search_fields = ['nombre'] 
     ordering_fields = ['categoria']
     ordering = ['categoria']
+
 
 class VentasView(CurrentUser):
     queryset = Ventas.objects.all()

@@ -22,7 +22,12 @@ class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Productos
         fields = "__all__"
-
+        #fields = ["avatar"]
+    """def save(self, *args, **kwargs):
+        if self.instance.avatar:
+            self.instance.avatar.delete()
+        return super().save(*args, **kwargs)
+    """
 class VentaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ventas

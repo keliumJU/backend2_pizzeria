@@ -14,10 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf.urls.static import static
 from django.urls import path, include
 
 #Endpoint de login
 from rest_framework_jwt.views import obtain_jwt_token
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +27,7 @@ urlpatterns = [
     path('compras/', include('compras.urls')),
     path('ventas/', include('ventas.urls')),
     path('auth/', obtain_jwt_token) #Al loguearnos en esta ruta generamos un token de autenticacion que dura 5 min aprox
-
 ]
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

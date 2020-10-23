@@ -4,7 +4,9 @@ from django.db.models.deletion import CASCADE
 from django.db.models.fields.related import ForeignKey
 #from tareas.models import Categorias
 #from nombre_app.nombre_modulo import nombre clase ...
-
+from django.utils import timezone
+import os
+import sys
 #Usuario Actual
 class AuthUser(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -29,13 +31,21 @@ class Ingredientes(models.Model):
 
 
 #producto
+
+def upload_to(instance, filename):
+    now = timezone.now()
+    base, extension = os.path.splitext(filename.lower())
+    milliseconds = now.microsecond // 1000
+    return f"users/{instance.categoria}/{now:%Y%m%d%H%M%S}{milliseconds}{extension}"
+
 class Productos(models.Model):
     codigo = models.CharField(max_length=255, unique=True)
     nombre = models.CharField(max_length=255)
     descripcion = models.TextField(null=True)
-    id_categoria = models.ForeignKey(Categorias, on_delete=CASCADE)
+    categoria = models.ForeignKey(Categorias, on_delete=CASCADE)
     precio = models.DecimalField(max_digits=9,decimal_places=2)
     ingredientes = models.ManyToManyField(Ingredientes)
+    img_product = models.ImageField(("Img_product"), upload_to=upload_to, blank=True)
     def __str__(self):
         return self.nombre
 
