@@ -1,11 +1,12 @@
 # virtualenv
 .venv
 venv/
-ENV/
+env/
+
 .vscode
 # Spyder project settings
-.spyderproject
-.spyproject
+#.spyderproject
+#.spyproject
 
 # Ignore Django Migrations in Development if you are working on team
 
