@@ -11,7 +11,7 @@ class CategoriaSerializer(serializers.ModelSerializer):
         fields = "__all__"
         #Esta linea nos permite ocultar el campo de usuario actual
         #porque se supone que todas las acciones realizadas seran con dicho usuario.
-    #usuario = serializers.HiddenField(default = serializers.CurrentUserDefault())
+    usuario = serializers.HiddenField(default = serializers.CurrentUserDefault())
 
 class IngredienteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,7 +39,8 @@ class VentaSerializer(serializers.ModelSerializer):
 class DetalleVentaSerializer(serializers.ModelSerializer):
     class Meta:
         model = DetalleVenta
-        fields = "__all__"
+        fields = "__all__"    
+    usuario = serializers.HiddenField(default = serializers.CurrentUserDefault())
 
 """
 class CategoriaSerializer(serializers.Serializer):

@@ -57,7 +57,7 @@ class Ventas(AuthUser):
     
 
 #detalle_venta
-class DetalleVenta(models.Model):
+class DetalleVenta(AuthUser):
     id_venta = models.ForeignKey(Ventas, on_delete=CASCADE)
     id_producto = models.ForeignKey(Productos, on_delete=CASCADE)
     cantidad = models.IntegerField()

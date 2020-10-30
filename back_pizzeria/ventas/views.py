@@ -48,15 +48,17 @@ class ProductosView(viewsets.ModelViewSet):
 class VentasView(CurrentUser):
     queryset = Ventas.objects.all()
     serializer_class = VentaSerializer
+    ordering = ['fecha_hora']
+    #orden descendiente para obtener la ultima venta(puesto que al ordenarse por fecha sera la ultima la primera)
 
-
-class DetalleVentaView(viewsets.ModelViewSet):
+class DetalleVentaView(CurrentUser):
     queryset = DetalleVenta.objects.all()        
     serializer_class = DetalleVentaSerializer
     search_fields = ['id_venta'] 
     ordering_fields = ['precio']
     ordering = ['id_venta']    
-
+    #traer la primera venta(puesto que seria la ultima por el orden en base a su fecha de creacion)
+    
 
 """
 from rest_framework.response import Response
