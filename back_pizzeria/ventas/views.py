@@ -1,11 +1,15 @@
 #Esto se maneja con rest_framework 
 
-from rest_framework import viewsets
+from rest_framework import serializers, viewsets
 #Puedo importar modulos que no pertenezcan a un paquete pero que los use.
 from .serializers import CategoriaSerializer, IngredienteSerializer, ProductoSerializer, VentaSerializer, DetalleVentaSerializer
 from .models import Categorias, Ingredientes, Productos, Ventas, DetalleVenta
 #Solucionar el problema de usuarios anonimos, puesto que genera un error no controlado
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+
+from rest_framework import permissions
+from rest_framework import authentication
 
 #Importamos el modulo de filtrado de django-rest-framework
 from django_filters.rest_framework import DjangoFilterBackend
@@ -18,9 +22,9 @@ class CurrentUser(viewsets.ModelViewSet):
         #Le asignamos a la variable usuario el usuario actual
         user = self.request.user
         #retornamos un filtro de los objetos en base al usuario actual
-        return self.serializer_class.Meta.model.objects.filter(usuario=user)
+        #return self.serializer_class.Meta.model.objects.filter(usuario=user)
     #permission_classes nos ayuda a controlar los usuarios Anonimos
-    permission_classes = [IsAuthenticated]        
+    #permission_classes = [IsAuthenticated]        
 
 #Aplicamos herencia CategoriasView, para que herede el CuerrentUser de esta forma pueda utilizar los atributos y metodos de viwsets.ModelViewSet y currentUser 
 class CategoriasView(viewsets.ModelViewSet):
@@ -45,18 +49,50 @@ class ProductosView(viewsets.ModelViewSet):
     ordering = ['categoria']
 
 
-class VentasView(CurrentUser):
+class VentasView(viewsets.ModelViewSet):
     queryset = Ventas.objects.all()
     serializer_class = VentaSerializer
     ordering = ['fecha_hora']
+    authentication_classes = [authentication.SessionAuthentication,
+                              authentication.TokenAuthentication]
+
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+
+class getLastVenta(APIView):
+    def get(self, request):
+        #obteniendo la ultima venta
+        venta = Ventas.objects.last()
+        serializer_ventas = VentaSerializer(venta)
+        return Response({
+            'last_venta': serializer_ventas.data
+        })
+
+class RegistrarVenta(APIView):
+    serializer_class = VentaSerializer
+   # Create a new movie
+    def post(self, request):
+        serializer = VentaSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(creator=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def perform_create(self, serializer):
+        serializer.save()
+
+    #def post
     #orden descendiente para obtener la ultima venta(puesto que al ordenarse por fecha sera la ultima la primera)
 
-class DetalleVentaView(CurrentUser):
+class DetalleVentaView(viewsets.ModelViewSet):
     queryset = DetalleVenta.objects.all()        
     serializer_class = DetalleVentaSerializer
     search_fields = ['id_venta'] 
-    ordering_fields = ['precio']
+    ordering_fields = ['precio'] 
     ordering = ['id_venta']    
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #permission_classes = [IsAuthenticated]
+
     #traer la primera venta(puesto que seria la ultima por el orden en base a su fecha de creacion)
     
 

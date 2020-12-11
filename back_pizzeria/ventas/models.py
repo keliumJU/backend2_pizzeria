@@ -54,10 +54,11 @@ class Productos(models.Model):
 class Ventas(AuthUser):
     fecha_hora = models.DateTimeField(auto_now_add=True) #Guarda la fecha actual al momento de crearse
     total = models.DecimalField(max_digits=9,decimal_places=2)
+
     
 
 #detalle_venta
-class DetalleVenta(AuthUser):
+class DetalleVenta(models.Model):
     id_venta = models.ForeignKey(Ventas, on_delete=CASCADE)
     id_producto = models.ForeignKey(Productos, on_delete=CASCADE)
     cantidad = models.IntegerField()
